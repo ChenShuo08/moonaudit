@@ -1,0 +1,7 @@
+"name": "moonaudit",
+"version": "0.1.0",
+"description": "A MoonBit project structure audit CLI.",
+"readme": "README.md",
+"license": "Apache-2.0",
+"dependencies": {},
+"dev-dependencies": {}
