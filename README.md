@@ -1,134 +1,57 @@
 # moonaudit
 
-`moonaudit` is a local MoonBit project structure audit CLI. It checks the basics that many small MoonBit projects still get wrong: missing `moon.pkg`, weak README structure, missing frontmatter, and inconsistent `src/` and `tests/` layout. Instead of manually reviewing these every time, you can run one local command and get a readable report you can act on.
+> Local MoonBit project structure audit CLI
 
-## Why
+- English: [`README.md`](README.md)
+- 中文：`README.zh-CN.md`
 
-Small MoonBit repositories often drift into structure that is "good enough," but still hard to review and maintain. Common problems include:
+`moonaudit` 是一个本地 MoonBit 项目结构审计 CLI，用于检查 MoonBit 小项目最常见的结构漂移问题，包括缺少 `moon.pkg`、README 不完整、frontmatter 缺失，以及 `src/` 与 `tests/` 组织不一致。项目面向 MoonBit 学习者、开源维护者、黑客松参赛者和团队开发场景，提供可本地运行的 `audit` 命令、分级报告和回归测试，帮助开发者在提交 PR、审查示例项目或准备演示前，快速发现“不难修但很分散”的项目结构问题。
 
-- missing or incomplete `moon.pkg`
-- missing or thin README
-- inconsistent `src/` and `tests/` organization
-- missing frontmatter in README and docs
-
-These issues do not usually break compilation, but they do slow down onboarding, documentation review, and collaboration. `moonaudit` is designed to catch those project-level issues early, before they become habits.
-
-## Who is this for
-
-- MoonBit learners building small CLI or learning projects
-- open source maintainers who want a lightweight structure check
-- hackathon participants who need fast, reviewer-friendly project hygiene
-- teams that want a simple pre-review checklist without a full linter
-
-## What it checks
-
-- `moon.pkg` presence at the project root
-- README presence and basic completeness
-- README frontmatter fields such as `title` and `description`
-- Markdown and MoonBit files for YAML frontmatter presence
-- core package directories such as `src/` and `tests/`
-
-## Features
-
-- Local CLI with a simple `audit <path>` workflow
-- readable plain-text report with `ERROR`, `WARN`, and `INFO`
-- JSON report output for tooling and CI integration
-- easy to run from the repo you are already editing
-- lightweight and fast enough to run before commits and PRs
-- useful for local docs review, teaching, and hackathon demos
-
-## Install
-
-Use this project as a local MoonBit CLI while iterating on audits.
+## 快速开始
 
 ```bash
 moon test tests
-```
-
-## Usage
-
-```bash
-moon run src/main -- audit <path>
-moon run src/main -- audit <path> --format json
-```
-
-### Examples
-
-```bash
 moon run src/main -- audit .
-moon run src/main -- audit examples/sample-project
 moon run src/main -- audit . --format json
 ```
 
-## Report format
+## 功能特性
 
-The report is designed to be short and actionable. Each finding includes a severity, a machine-friendly code, and a plain-English message. A summary line at the end shows how many errors, warnings, and info items were found.
+- 检查 `moon.pkg`、README、`src/`、`tests/` 等核心结构
+- 检查 README frontmatter：`title`、`description`
+- 检查 Markdown 与 MoonBit 文件的 YAML frontmatter
+- 输出分级报告：`ERROR`、`WARN`、`INFO`
+- 支持 plain / JSON 输出，便于脚本和 CI 集成
 
-JSON output includes the same findings plus a summary object, which makes `moonaudit` easier to integrate with editors, scripts, and CI.
+## 使用场景
 
-## Project Structure
+- 提交 PR 前快速检查项目结构
+- 审阅他人 MoonBit 示例项目
+- 黑客松演示或提交前的项目整理
+- 教学时讲解项目结构和 README 规范
+
+## 项目结构
 
 ```text
 src/
-  main.mbt      audit CLI entrypoint
-  types.mbt     project model and finding types
-  fs.mbt        filesystem reader
-  checks.mbt    audit rules
-  report.mbt    report renderer
-  cli.mbt       CLI argument parser
+  main.mbt      audit CLI 入口
+  types.mbt     项目模型与 finding 类型
+  fs.mbt        文件系统读取
+  checks.mbt    审计规则
+  report.mbt    报告输出
+  cli.mbt       命令行参数解析
 tests/
-  audit_test.mbt CLI and check tests
+  audit_test.mbt CLI 与规则测试
 examples/
   sample-project/
 docs/
-  proposal.md   one-page project proposal
+  proposal.md   一页项目说明
 ```
 
-## When to use it
+## 限制说明
 
-- before opening a PR, to catch structure and documentation gaps
-- while reviewing someone else's MoonBit sample project
-- before a hackathon demo or submission review
-- when teaching project layout and README conventions
+`moonaudit` 聚焦结构和文档规范，不做完整 lint、AST 级语义分析或跨包依赖检查。
 
-## Limitations
-
-`moonaudit` focuses on structure and documentation conventions. It does not perform full linting, AST-level semantic analysis, or cross-package dependency analysis. For deeper code quality checks, pair it with the MoonBit linter and formatter.
-
-## Sample Output
-
-```text
-moonaudit report
-===============
-
-[ERROR] missing-moon-pkg: Missing moon.pkg at project root.
-[WARN] missing-tests: Missing tests/ directory.
-[INFO] doc-missing-frontmatter: Document lacks YAML frontmatter: src/main.mbt
-
-errors=1 warnings=1 info=1
-```
-
-## Roadmap
-
-- more README and docs checks
-- package boundary checks for MoonBit modules
-- configurable rule sets and ignore paths
-- richer output formats such as JSON and Markdown reports
-- GitHub Actions workflow helper
-
-## Contributing
-
-Issues and PRs are welcome. If you want to add a new audit rule, the best path is:
-
-1. open an issue describing the problem and example output
-2. add a test case under `tests/`
-3. implement the rule in `src/checks.mbt`
-4. update this README if the user-facing behavior changes
-
-## License
+## 许可协议
 
 Apache-2.0
-
-## 中文 README
-
-本项目也提供中文说明，详见 [`README.zh-CN.md`](README.zh-CN.md)。
