@@ -13,6 +13,7 @@
 moon test tests
 moon run src/main -- audit .
 moon run src/main -- audit . --format json
+moon run src/main -- audit . --format markdown
 ```
 
 ## 功能特性
@@ -21,7 +22,7 @@ moon run src/main -- audit . --format json
 - 检查 README frontmatter：`title`、`description`
 - 检查 Markdown 与 MoonBit 文件的 YAML frontmatter
 - 输出分级报告：`ERROR`、`WARN`、`INFO`
-- 支持 plain / JSON 输出，便于脚本和 CI 集成
+- 支持 plain / JSON / Markdown 输出，便于脚本、审查和 CI 集成
 
 ## 使用场景
 

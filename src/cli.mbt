@@ -20,6 +20,16 @@ pub fn format_flag(args :List[String]) -> String {
   "plain"
 }
 
+pub fn ignore_file_flag(args :List[String]) -> Option[String] {
+  let args = remove_flag(args, "--ignore-file")
+  for part in args {
+    if part.starts_with("--ignore-file=") {
+      return Some(part.slice(14, part.length()))
+    }
+  }
+  None
+}
+
 pub fn remove_flag(flags :List[String], flag :String) -> List[String] {
   let out = []
   for item in flags {

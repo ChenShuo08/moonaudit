@@ -49,6 +49,40 @@ pub fn to_json(report :Report) -> String {
   @json.stringify(#{"findings": payload, "summary": summary})
 }
 
+pub fn to_markdown(report :Report) -> String {
+  let buf = StringBuilder()
+  buf.write_string("# moonaudit report\n\n")
+  if report.findings.length() == 0 {
+    buf.write_string("No findings.\n")
+    return buf.to_string()
+  }
+  for finding in report.findings {
+    let tag =
+      match finding.severity {
+        Error => "ERROR"
+        Warning => "WARN"
+        Info => "INFO"
+      }
+    buf.write_string("- [")
+    buf.write_string(tag)
+    buf.write_string("] **")
+    buf.write_string(finding.code)
+    buf.write_string("**: ")
+    buf.write_string(finding.message)
+    buf.write_string("\n")
+  }
+  buf.write_string("\n")
+  let counts = count_severities(report.findings)
+  buf.write_string("**summary** errors=")
+  buf.write_string(@string.from_int(counts.errors))
+  buf.write_string(" warnings=")
+  buf.write_string(@string.from_int(counts.warnings))
+  buf.write_string(" info=")
+  buf.write_string(@string.from_int(counts.info))
+  buf.write_string("\n")
+  buf.to_string()
+}
+
 fn finding_to_map(finding :Finding) -> Map[String, Any] {
   let severity =
     match finding.severity {

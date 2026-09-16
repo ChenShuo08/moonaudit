@@ -51,6 +51,18 @@ fn test_audit_json_output() -> Unit {
   })
 }
 
+fn test_audit_markdown_output() -> Unit {
+  wbtest::with_temp_dir("mb-audit-markdown", fn (dir) {
+    wbtest::write_file(dir ++ "/moon.pkg", '{"name":"demo"}')
+    wbtest::write_file(dir ++ "/README.md", "# Demo\n")
+    wbtest::write_file(dir ++ "/src/main.mbt", "pub fn main() {}\n")
+    let report = run_audit(dir, "markdown")
+    assert(report.contains("# moonaudit report"))
+    assert(report.contains("[ERROR] missing-readme"))
+    assert(report.contains("**summary** errors="))
+  })
+}
+
 fn run_audit(path :String, format :String) -> String {
   let project = @moonaudit.fs.read_project(path)
   let report = @moonaudit.checks.run(project)
