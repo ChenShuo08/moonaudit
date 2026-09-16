@@ -47,7 +47,7 @@ fn has_frontmatter(path :String) -> Bool {
   let source = @fs.read(path)
   let lines = source.split("\n")
   match lines {
-    ["---", .._] => true
+    ["---", ..rest] => true
     _ => false
   }
 }

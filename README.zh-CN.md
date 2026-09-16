@@ -18,7 +18,7 @@ moon run src/main -- audit . --format markdown
 
 ## 功能特性
 
-- 检查 `moon.pkg`、README、`src/`、`tests/` 等核心结构
+- 检查 `moon.pkg`、README、`src/`、`tests/`、`CHANGELOG.md` 等核心结构
 - 检查 README frontmatter：`title`、`description`
 - 检查 Markdown 与 MoonBit 文件的 YAML frontmatter
 - 输出分级报告：`ERROR`、`WARN`、`INFO`
@@ -72,3 +72,4 @@ README.internal.md
 ## 许可协议
 
 Apache-2.0
+

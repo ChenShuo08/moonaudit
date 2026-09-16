@@ -1,12 +1,50 @@
 #!/usr/bin/env -S moon run .
 
 pub fn main() {
-  let args = @moonaudit.cli.parse_args()
-  match args {
-    ["audit", path] => run_audit(path, @moonaudit.cli.format_flag([]), @moonaudit.cli.ignore_file_flag([]))
-    ["audit", path, ..rest] => run_audit(path, @moonaudit.cli.format_flag(rest), @moonaudit.cli.ignore_file_flag(rest))
+  let args = @cli.args()
+  let rest = match args {
+    [] => []
+    [_, ..rest] => rest
+  }
+  match rest {
+    ["audit", path] => run_audit(path, format_flag([]), ignore_file_flag([]))
+    ["audit", path, ..more] => run_audit(path, format_flag(more), ignore_file_flag(more))
     _ => print("Usage: moon run src/main -- audit <path> [--format plain|json|markdown] [--ignore-file <path>]\n")
   }
+}
+
+pub fn format_flag(args :List[String]) -> String {
+  let args = remove_flag(args, "--format")
+  for part in args {
+    if part.starts_with("--format=") {
+      return part.slice(9, part.length())
+    }
+  }
+  "plain"
+}
+
+pub fn ignore_file_flag(args :List[String]) -> Option[String] {
+  let args = remove_flag(args, "--ignore-file")
+  for part in args {
+    if part.starts_with("--ignore-file=") {
+      return Some(part.slice(14, part.length()))
+    }
+    if part.starts_with("--ignore-file?") {
+      return Some(part.slice(14, part.length()))
+    }
+  }
+  None
+}
+
+pub fn remove_flag(flags :List[String], flag :String) -> List[String] {
+  let out = []
+  for item in flags {
+    if item == flag || item.starts_with(flag ++ "=") || item.starts_with(flag ++ "?") {
+      continue
+    }
+    out.push(item)
+  }
+  out
 }
 
 fn run_audit(path :String, format :String, ignore_file :Option[String]) -> Unit {
@@ -33,6 +71,7 @@ fn apply_ignore_file(project :Project, ignore_file :Option[String]) -> Project {
           packages,
           has_src: project.has_src && !is_ignored(project.root ++ "/src", project.root, patterns),
           has_tests: project.has_tests && !is_ignored(project.root ++ "/tests", project.root, patterns),
+          has_changelog: project.has_changelog && !is_ignored(project.root ++ "/CHANGELOG.md", project.root, patterns),
         }
       } else {
         project

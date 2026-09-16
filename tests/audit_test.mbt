@@ -1,8 +1,3 @@
-/// Regression tests for the project audit CLI and checks.
-///
-/// Run with: moon test tests
-use wbtest
-
 fn test_audit_missing_project_files() -> Unit {
   wbtest::with_temp_dir("mb-audit-missing", fn (dir) {
     let report = run_audit(dir, "plain")
@@ -10,6 +5,7 @@ fn test_audit_missing_project_files() -> Unit {
     assert_contains(report, "[ERROR] missing-readme: Missing README at project root.")
     assert_contains(report, "[ERROR] missing-src: Missing src/ directory.")
     assert_contains(report, "[WARN] missing-tests: Missing tests/ directory.")
+    assert_contains(report, "[WARN] missing-changelog: Missing CHANGELOG.md at project root.")
   })
 }
 
@@ -32,6 +28,7 @@ fn test_audit_valid_project() -> Unit {
     wbtest::write_file(dir ++ "/README.md", "---\ntitle: Demo\ndescription: ok\n---\n# Demo\n")
     wbtest::mkdir(dir ++ "/src")
     wbtest::write_file(dir ++ "/src/main.mbt", "pub fn main() {}\n")
+    wbtest::write_file(dir ++ "/CHANGELOG.md", "# Changelog\n")
     wbtest::mkdir(dir ++ "/tests")
     wbtest::write_file(dir ++ "/tests/main_test.mbt", "#[test]\nfn test_main() {}\n")
     let report = run_audit(dir, "plain")
@@ -63,11 +60,25 @@ fn test_audit_markdown_output() -> Unit {
   })
 }
 
+fn test_audit_ignore_file() -> Unit {
+  wbtest::with_temp_dir("mb-audit-ignore", fn (dir) {
+    wbtest::write_file(dir ++ "/moon.pkg", '{"name":"demo"}')
+    wbtest::write_file(dir ++ "/README.md", "---\ntitle: Demo\ndescription: ok\n---\n# Demo\n")
+    wbtest::write_file(dir ++ "/src/main.mbt", "pub fn main() {}\n")
+    wbtest::write_file(dir ++ "/src/internal/app.mbt", "pub fn main() {}\n")
+    wbtest::write_file(dir ++ "/README.internal.md", "---\ntitle: internal\n---\n")
+    wbtest::write_file(dir ++ "/.moonauditignore", "src/internal/app.mbt\nREADME.internal.md\n")
+    let report = run_audit(dir ++ "?ignore-file=" ++ dir ++ "/.moonauditignore", "plain")
+    assert(!report.contains("README.internal.md"))
+  })
+}
+
 fn run_audit(path :String, format :String) -> String {
   let project = @moonaudit.fs.read_project(path)
   let report = @moonaudit.checks.run(project)
   match format {
     "json" => @moonaudit.report.to_json(report)
+    "markdown" => @moonaudit.report.to_markdown(report)
     _ => @moonaudit.report.render(report)
   }
 }
