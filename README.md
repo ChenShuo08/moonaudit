@@ -32,6 +32,7 @@ These issues do not usually break compilation, but they do slow down onboarding,
 
 - Local CLI with a simple `audit <path>` workflow
 - readable plain-text report with `ERROR`, `WARN`, and `INFO`
+- JSON report output for tooling and CI integration
 - easy to run from the repo you are already editing
 - lightweight and fast enough to run before commits and PRs
 - useful for local docs review, teaching, and hackathon demos
@@ -48,6 +49,7 @@ moon test tests
 
 ```bash
 moon run src/main -- audit <path>
+moon run src/main -- audit <path> --format json
 ```
 
 ### Examples
@@ -55,13 +57,14 @@ moon run src/main -- audit <path>
 ```bash
 moon run src/main -- audit .
 moon run src/main -- audit examples/sample-project
+moon run src/main -- audit . --format json
 ```
 
 ## Report format
 
 The report is designed to be short and actionable. Each finding includes a severity, a machine-friendly code, and a plain-English message. A summary line at the end shows how many errors, warnings, and info items were found.
 
-This makes `moonaudit` useful as a pre-review checklist, not just a random scanner.
+JSON output includes the same findings plus a summary object, which makes `moonaudit` easier to integrate with editors, scripts, and CI.
 
 ## Project Structure
 

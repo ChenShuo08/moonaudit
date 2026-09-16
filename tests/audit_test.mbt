@@ -4,8 +4,8 @@
 use wbtest
 
 fn test_audit_missing_project_files() -> Unit {
-  wbtest::with_temp_dir("moonaudit-missing", fn (dir) {
-    let report = run_audit(dir)
+  wbtest::with_temp_dir("mb-audit-missing", fn (dir) {
+    let report = run_audit(dir, "plain")
     assert_contains(report, "[ERROR] missing-moon-pkg: Missing moon.pkg at project root.")
     assert_contains(report, "[ERROR] missing-readme: Missing README at project root.")
     assert_contains(report, "[ERROR] missing-src: Missing src/ directory.")
@@ -14,12 +14,12 @@ fn test_audit_missing_project_files() -> Unit {
 }
 
 fn test_audit_frontmatter_checks() -> Unit {
-  wbtest::with_temp_dir("moonaudit-frontmatter", fn (dir) {
+  wbtest::with_temp_dir("mb-audit-frontmatter", fn (dir) {
     wbtest::write_file(dir ++ "/moon.pkg", '{"name":"demo"}')
     wbtest::write_file(dir ++ "/README.md", "# Demo\n")
     wbtest::mkdir(dir ++ "/src")
     wbtest::write_file(dir ++ "/src/main.mbt", "pub fn main() {}\n")
-    let report = run_audit(dir)
+    let report = run_audit(dir, "plain")
     assert_contains(report, "[WARN] readme-missing-title: README is missing frontmatter title.")
     assert_contains(report, "[WARN] readme-missing-description: README is missing frontmatter description.")
     assert_contains(report, "[INFO] doc-missing-frontmatter: Document lacks YAML frontmatter: " ++ dir ++ "/src/main.mbt")
@@ -27,25 +27,39 @@ fn test_audit_frontmatter_checks() -> Unit {
 }
 
 fn test_audit_valid_project() -> Unit {
-  wbtest::with_temp_dir("moonaudit-valid", fn (dir) {
+  wbtest::with_temp_dir("mb-audit-valid", fn (dir) {
     wbtest::write_file(dir ++ "/moon.pkg", '{"name":"demo"}')
     wbtest::write_file(dir ++ "/README.md", "---\ntitle: Demo\ndescription: ok\n---\n# Demo\n")
     wbtest::mkdir(dir ++ "/src")
     wbtest::write_file(dir ++ "/src/main.mbt", "pub fn main() {}\n")
     wbtest::mkdir(dir ++ "/tests")
     wbtest::write_file(dir ++ "/tests/main_test.mbt", "#[test]\nfn test_main() {}\n")
-    let report = run_audit(dir)
+    let report = run_audit(dir, "plain")
     assert_eq(report, "moonaudit report\n===============\n\nNo findings.\n\nerrors=0 warnings=0 info=0\n")
   })
 }
 
-fn run_audit(path :String) -> String {
+fn test_audit_json_output() -> Unit {
+  wbtest::with_temp_dir("mb-audit-json", fn (dir) {
+    wbtest::write_file(dir ++ "/moon.pkg", '{"name":"demo"}')
+    wbtest::write_file(dir ++ "/README.md", "# Demo\n")
+    let json = run_audit(dir, "json")
+    assert(json.contains('"errors"'))
+    assert(json.contains('"warnings"'))
+    assert(json.contains('"info"'))
+    assert(json.contains('readme-missing-title'))
+  })
+}
+
+fn run_audit(path :String, format :String) -> String {
   let project = @moonaudit.fs.read_project(path)
   let report = @moonaudit.checks.run(project)
-  @moonaudit.report.render(report)
+  match format {
+    "json" => @moonaudit.report.to_json(report)
+    _ => @moonaudit.report.render(report)
+  }
 }
 
 fn assert_contains(text :String, expected :String) -> Unit {
   assert(text.contains(expected))
 }
-

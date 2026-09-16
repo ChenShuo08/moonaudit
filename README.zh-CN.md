@@ -32,6 +32,7 @@
 
 - 本地 CLI，使用方式简单：`moon run src/main -- audit <path>`
 - 输出可读的纯文本报告，包含 `ERROR`、`WARN`、`INFO`
+- 支持 JSON 格式输出，便于脚本和 CI 集成
 - 适合本地开发、文档审查、教学和黑客松演示
 - 轻量、快速，能融入日常开发流程
 
@@ -47,6 +48,7 @@ moon test tests
 
 ```bash
 moon run src/main -- audit <path>
+moon run src/main -- audit <path> --format json
 ```
 
 ### 示例
@@ -54,13 +56,14 @@ moon run src/main -- audit <path>
 ```bash
 moon run src/main -- audit .
 moon run src/main -- audit examples/sample-project
+moon run src/main -- audit . --format json
 ```
 
 ## 报告格式
 
 报告设计为短而可执行。每个 finding 都会包含严重级别、问题代码和可直接阅读的说明。报告末尾还会统计 errors、warnings 和 info 的数量。
 
-这让 `moonaudit` 既能做扫描工具，也能做提交前的 checklist。
+JSON 输出会包含 findings 和 summary，方便你接续脚本、编辑器插件或 CI 使用。
 
 ## 项目结构
 
@@ -109,7 +112,7 @@ errors=1 warnings=1 info=1
 - 更多 README 和文档检查规则
 - MoonBit 模块边界检查
 - 可配置规则集和 ignore paths
-- JSON / Markdown 报告输出
+- 更多输出格式，例如 JSON 和 Markdown 报告
 - GitHub Actions 工作流辅助
 
 ## 参与贡献

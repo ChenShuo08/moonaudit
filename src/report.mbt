@@ -36,6 +36,29 @@ pub fn render(report :Report) -> String {
   buf.to_string()
 }
 
+pub fn to_json(report :Report) -> String {
+  let payload = List[Map[String, Any]]
+  for finding in report.findings {
+    payload.push(finding_to_map(finding))
+  }
+  let summary = #{
+    "errors": count_severities(report.findings).errors,
+    "warnings": count_severities(report.findings).warnings,
+    "info": count_severities(report.findings).info,
+  }
+  @json.stringify(#{"findings": payload, "summary": summary})
+}
+
+fn finding_to_map(finding :Finding) -> Map[String, Any] {
+  let severity =
+    match finding.severity {
+      Error => "error"
+      Warning => "warning"
+      Info => "info"
+    }
+  #{"severity": severity, "code": finding.code, "message": finding.message}
+}
+
 fn count_severities(findings :List[Finding]) -> ReportCounts {
   let errors = 0
   let warnings = 0
@@ -55,4 +78,3 @@ struct ReportCounts {
   let warnings :Int
   let info :Int
 }
-
