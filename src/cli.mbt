@@ -33,7 +33,7 @@ pub fn ignore_file_flag(args :List[String]) -> Option[String] {
 pub fn remove_flag(flags :List[String], flag :String) -> List[String] {
   let out = []
   for item in flags {
-    if item == flag || item.starts_with(flag ++ "=") {
+    if item == flag || item.starts_with(flag ++ "=") || item.starts_with(flag ++ "?") {
       continue
     }
     out.push(item)

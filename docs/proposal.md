@@ -1,4 +1,4 @@
-# moonaudit - project proposal
+# moonaudit project proposal
 
 ## 基本信息
 
@@ -13,6 +13,10 @@ Small MoonBit projects often drift into inconsistent structure: missing `moon.pk
 
 ## Goals
 
+- Support plain, json, and markdown output for review and CI.
+- Provide .moonauditignore and --ignore-file support.
+- Warn on missing CHANGELOG.md.
+
 - Provide a local CLI: `moon run src/main -- audit <path>`
 - Check root project structure: `moon.pkg`, `README`, `src/`, `tests/`
 - Check README frontmatter: `title`, `description`
@@ -20,6 +24,13 @@ Small MoonBit projects often drift into inconsistent structure: missing `moon.pk
 - Output a readable report with `ERROR`, `WARN`, and `INFO`
 
 ## MVP Features
+
+1. udit <path> with plain, json, and markdown output
+2. .moonauditignore and --ignore-file support
+3. Checks for moon.pkg, README, src/, 	ests/, CHANGELOG.md
+4. README frontmatter validation
+5. Frontmatter checks for docs/source files
+6. Sample project and regression tests
 
 1. 扫描 MoonBit 项目根目录和关键目录
 2. 检查 `moon.pkg`、README、`src/`、`tests/` 是否存在

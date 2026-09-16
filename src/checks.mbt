@@ -20,6 +20,9 @@ pub fn run(project :Project) -> Report {
   if !project.has_src {
     findings.push( Finding { severity: Error, code: "missing-src", message: "Missing src/ directory." } )
   }
+  if !project.has_changelog {
+    findings.push( Finding { severity: Warning, code: "missing-changelog", message: "Missing CHANGELOG.md at project root." } )
+  }
   if !project.has_tests {
     findings.push( Finding { severity: Warning, code: "missing-tests", message: "Missing tests/ directory." } )
   }

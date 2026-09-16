@@ -49,6 +49,19 @@ docs/
   proposal.md   一页项目说明
 ```
 
+## 自定义忽略文件
+
+在项目根目录创建 `.moonauditignore` 或通过 `--ignore-file` 传入，可跳过不需要审计的路径。
+
+- 支持通配符与按目录忽略
+- 适合临时忽略 generator 输出、旧示例或文档快照
+- 示例：
+
+```text
+src/internal/**
+README.internal.md
+```
+
 ## 限制说明
 
 `moonaudit` 聚焦结构和文档规范，不做完整 lint、AST 级语义分析或跨包依赖检查。

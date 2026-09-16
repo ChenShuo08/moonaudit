@@ -5,11 +5,12 @@ pub fn read_project(root :String) -> Project {
   let has_moon_pkg = @fs.exists(root ++ "/moon.pkg")
   let has_readme = readme_exists(root)
   let has_src = @fs.exists(root ++ "/src")
+  let has_changelog = @fs.exists(root ++ "/CHANGELOG.md")
   let has_tests = @fs.exists(root ++ "/tests")
   let frontmatter_files = collect_frontmatter_files(root)
   let readme_frontmatter = if has_readme { parse_frontmatter_file(root ++ "/README.md") } else { Map[] }
   let packages = collect_package_dirs(root)
-  Project { root, has_moon_pkg, has_readme, has_src, has_tests, frontmatter_files, readme_frontmatter, packages }
+  Project { root, has_moon_pkg, has_readme, has_src, has_changelog, has_tests, frontmatter_files, readme_frontmatter, packages }
 }
 
 fn readme_exists(root :String) -> Bool {
