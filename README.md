@@ -47,6 +47,9 @@ examples/
   sample-project/
 docs/
   proposal.md   一页项目说明
+\.github/
+  workflows/
+    ci.yml      GitHub Actions
 ```
 
 ## 自定义忽略文件
