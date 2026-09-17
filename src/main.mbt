@@ -69,6 +69,9 @@ fn run_audit(path :String, format :String, ignore_file :Option[String], severity
     "markdown" => print(@moonaudit.report.to_markdown(report))
     _ => print(@moonaudit.report.render(report))
   }
+  if report.findings.length() > 0 {
+    @sys.exit(1)
+  }
 }
 
 fn run_self_audit(format :String) -> Unit {
