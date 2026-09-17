@@ -37,7 +37,25 @@ pub fn run(project :Project) -> Report {
       }
     }
   }
+  let deep_paths = deep_package_files(project)
+  if deep_paths.length() > 0 {
+    findings.push( Finding { severity: Warning, code: "deep-package-files", message: "Deep package files detected: " ++ deep_paths.join(", ") } )
+  }
   Report { findings }
+}
+
+fn deep_package_files(project :Project) -> List[String] {
+  let out = []
+  for path in project.frontmatter_files {
+    if path.starts_with(project.root ++ "/src/") || path.starts_with(project.root ++ "/tests/") {
+      let rel = path.slice(project.root.length() + 1, path.length())
+      let segments = rel.split("/")
+      if segments.length() > 4 {
+        out.push(rel)
+      }
+    }
+  }
+  out
 }
 
 fn has_frontmatter(path :String) -> Bool {

@@ -1,3 +1,8 @@
+/// Regression tests for the project audit CLI and checks.
+///
+/// Run with: moon test tests
+use wbtest
+
 fn test_audit_missing_project_files() -> Unit {
   wbtest::with_temp_dir("mb-audit-missing", fn (dir) {
     let report = run_audit(dir, "plain")
@@ -70,6 +75,17 @@ fn test_audit_ignore_file() -> Unit {
     wbtest::write_file(dir ++ "/.moonauditignore", "src/internal/app.mbt\nREADME.internal.md\n")
     let report = run_audit(dir ++ "?ignore-file=" ++ dir ++ "/.moonauditignore", "plain")
     assert(!report.contains("README.internal.md"))
+  })
+}
+
+fn test_audit_severity_filter() -> Unit {
+  wbtest::with_temp_dir("mb-audit-severity", fn (dir) {
+    wbtest::write_file(dir ++ "/moon.pkg", '{"name":"demo"}')
+    wbtest::write_file(dir ++ "/README.md", "# Demo\n")
+    wbtest::write_file(dir ++ "/src/main.mbt", "pub fn main() {}\n")
+    let report = run_audit(dir ++ "?severity=error", "plain")
+    assert(report.contains("missing-readme"))
+    assert(!report.contains("readme-missing-title"))
   })
 }
 

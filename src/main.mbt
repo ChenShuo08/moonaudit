@@ -7,9 +7,9 @@ pub fn main() {
     [_, ..rest] => rest
   }
   match rest {
-    ["audit", path] => run_audit(path, format_flag([]), ignore_file_flag([]))
-    ["audit", path, ..more] => run_audit(path, format_flag(more), ignore_file_flag(more))
-    _ => print("Usage: moon run src/main -- audit <path> [--format plain|json|markdown] [--ignore-file <path>]\n")
+    ["audit", path] => run_audit(path, format_flag([]), ignore_file_flag([]), severity_flag([]))
+    ["audit", path, ..more] => run_audit(path, format_flag(more), ignore_file_flag(more), severity_flag(more))
+    _ => print("Usage: moon run src/main -- audit <path> [--format plain|json|markdown] [--ignore-file <path>] [--severity error|warning|info]\n")
   }
 }
 
@@ -21,6 +21,16 @@ pub fn format_flag(args :List[String]) -> String {
     }
   }
   "plain"
+}
+
+pub fn severity_flag(args :List[String]) -> Option[String] {
+  let args = remove_flag(args, "--severity")
+  for part in args {
+    if part.starts_with("--severity=") {
+      return Some(part.slice(11, part.length()))
+    }
+  }
+  None
 }
 
 pub fn ignore_file_flag(args :List[String]) -> Option[String] {
@@ -47,14 +57,32 @@ pub fn remove_flag(flags :List[String], flag :String) -> List[String] {
   out
 }
 
-fn run_audit(path :String, format :String, ignore_file :Option[String]) -> Unit {
+fn run_audit(path :String, format :String, ignore_file :Option[String], severity :Option[String]) -> Unit {
   let project = @moonaudit.fs.read_project(path)
   let project = apply_ignore_file(project, ignore_file)
   let report = @moonaudit.checks.run(project)
+  let report = apply_severity_filter(report, severity)
   match format {
     "json" => print(@moonaudit.report.to_json(report))
     "markdown" => print(@moonaudit.report.to_markdown(report))
     _ => print(@moonaudit.report.render(report))
+  }
+}
+
+fn apply_severity_filter(report :Report, severity :Option[String]) -> Report {
+  match severity {
+    Some(level) =>
+      let level = level.trim().to_lower()
+      let filtered = report.findings.filter(_, fn (finding) {
+        match level {
+          "error" => match finding.severity { Error => true | _ => false }
+          "warning" => match finding.severity { Error | Warning => true | _ => false }
+          "info" => true
+          _ => true
+        }
+      })
+      Report { findings: filtered }
+    None => report
   }
 }
 
