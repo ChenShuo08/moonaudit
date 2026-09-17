@@ -9,6 +9,8 @@ pub fn main() {
   match rest {
     ["audit", path] => run_audit(path, format_flag([]), ignore_file_flag([]), severity_flag([]))
     ["audit", path, ..more] => run_audit(path, format_flag(more), ignore_file_flag(more), severity_flag(more))
+    ["self-audit"] => run_self_audit(format_flag([]))
+    ["self-audit", ..more] => run_self_audit(format_flag(more))
     _ => print("Usage: moon run src/main -- audit <path> [--format plain|json|markdown] [--ignore-file <path>] [--severity error|warning|info]\n")
   }
 }
@@ -62,6 +64,17 @@ fn run_audit(path :String, format :String, ignore_file :Option[String], severity
   let project = apply_ignore_file(project, ignore_file)
   let report = @moonaudit.checks.run(project)
   let report = apply_severity_filter(report, severity)
+  match format {
+    "json" => print(@moonaudit.report.to_json(report))
+    "markdown" => print(@moonaudit.report.to_markdown(report))
+    _ => print(@moonaudit.report.render(report))
+  }
+}
+
+fn run_self_audit(format :String) -> Unit {
+  let root = @fs.dirname(@fs.dirname(@fs.dirname(__FILE__)))
+  let project = @moonaudit.fs.read_project(root)
+  let report = @moonaudit.checks.run(project)
   match format {
     "json" => print(@moonaudit.report.to_json(report))
     "markdown" => print(@moonaudit.report.to_markdown(report))

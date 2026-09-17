@@ -89,6 +89,19 @@ fn test_audit_severity_filter() -> Unit {
   })
 }
 
+fn test_audit_deep_package_files() -> Unit {
+  wbtest::with_temp_dir("mb-audit-deep", fn (dir) {
+    wbtest::write_file(dir ++ "/moon.pkg", '{"name":"demo"}')
+    wbtest::write_file(dir ++ "/README.md", "---\ntitle: Demo\ndescription: ok\n---\n# Demo\n")
+    wbtest::write_file(dir ++ "/src/main.mbt", "pub fn main() {}\n")
+    wbtest::mkdir(dir ++ "/src/a/b/c")
+    wbtest::write_file(dir ++ "/src/a/b/c/deep.mbt", "pub fn main() {}\n")
+    let report = run_audit(dir, "plain")
+    assert(report.contains("deep-package-files"))
+    assert(report.contains("src/a/b/c/deep.mbt"))
+  })
+}
+
 fn run_audit(path :String, format :String) -> String {
   let project = @moonaudit.fs.read_project(path)
   let report = @moonaudit.checks.run(project)
