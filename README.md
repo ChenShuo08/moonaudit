@@ -23,6 +23,9 @@ moon run src/main -- audit . --format markdown
 - 检查 Markdown 与 MoonBit 文件的 YAML frontmatter
 - 输出分级报告：`ERROR`、`WARN`、`INFO`
 - 支持 plain / JSON / Markdown 输出，便于脚本、审查和 CI 集成
+- 支持 `--severity` 过滤，可按 `error` / `warning` / `info` 只看某类问题
+- 支持 `self-audit` 子命令，直接检查 moonaudit 自身项目结构
+- 发现问题时返回非零退出码，便于 CI / 预提交脚本集成
 
 ## 使用场景
 
@@ -72,5 +75,6 @@ README.internal.md
 ## 许可协议
 
 Apache-2.0
+
 
 
