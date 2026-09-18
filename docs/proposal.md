@@ -1,57 +1,51 @@
-# moonaudit project proposal
+# moonaudit 项目申报书
 
-## 基本信息
+**基本信息**
 
-- Project name: moonaudit
-- 赛道方向：开发体验工具 / Web 与网络基础设施辅助工具
-- 项目链接：https://github.com/ChenShuo08/moonaudit
-- One-line description: a local MoonBit project structure audit CLI that checks directory layout, package layout, README completeness, frontmatter conventions, and ignore support.
+- 项目名称：moonaudit：本地 MoonBit 项目结构审计 CLI
+- 参赛者：布丁大魔王
+- 联系方式：g1ker@qq.com
+- GitHub 仓库链接：[https://github.com/ChenShuo08/moonaudit](https://github.com/ChenShuo08/moonaudit)
+- 项目方向：MoonBit 开发体验工具 / 应用与内容工具
+- 是否为原创项目：是
 
-## Problem
+**项目简介**
 
-Small MoonBit projects often drift into inconsistent structure: missing `moon.pkg`, incomplete READMEs, missing frontmatter, missing `CHANGELOG.md`, and mixed `src/` and `tests/` layouts. These issues hurt maintainability, discoverability, and collaboration. `moonaudit` provides a lightweight local audit tool to surface structural problems before review or release.
+moonaudit 是一个本地 MoonBit 项目结构审计 CLI，用于检查 MoonBit 小项目最常见的结构漂移问题，包括缺少 `moon.pkg`、README 不完整、frontmatter 缺失、`CHANGELOG.md` 缺失、过深的包文件路径，以及 `src/` 与 `tests/` 组织不一致。项目面向 MoonBit 学习者、开源维护者、黑客松参赛者和团队开发场景，提供可本地运行的 `audit` 命令、分级报告和回归测试，帮助开发者在提交 PR、审查示例项目或准备演示前，快速发现“不难修但很分散”的项目结构问题。
 
-## Goals
+**项目方向，通用性说明**
 
-- Provide a local CLI: `moon run src/main -- audit <path>`
-- Check root project structure: `moon.pkg`, README, `src/`, `tests/`, `CHANGELOG.md`
-- Check README frontmatter: `title`, `description`
-- Check frontmatter conventions across docs and source files
-- Support `.moonauditignore` and `--ignore-file` to skip generated or example paths
-- Output a readable report with `ERROR`, `WARN`, and `INFO`
-- Support `plain`, `json`, and `markdown` output
+- 属于“语言与开发工具”和“应用与内容工具”交叉方向，聚焦 MoonBit 本地开发体验。
+- 工具不绑定特定业务领域，可复用于示例项目、教学仓库、团队 MoonBit 小项目和 Hackathon 提交物。
+- 输出格式兼顾人类审阅与机器集成，因此既可用于个人本地检查，也可用于 CI / 预提交钩子。
 
-## MVP Features
+**预期使用场景**
 
-1. `audit <path>` with `plain`, `json`, and `markdown` output
-2. `.moonauditignore` and `--ignore-file` support
-3. Checks for `moon.pkg`, README, `src/`, `tests/`, `CHANGELOG.md`
-4. README frontmatter validation
-5. Frontmatter checks for docs/source files
-6. Sample project and regression tests
-7. GitHub Actions CI for core regression checks
+- 提交 PR 前快速检查项目结构，减少 reviewer 被基础结构问题分散注意力的情况。
+- 在 CI 或预提交钩子中运行 `moonaudit`，把项目结构规范纳入自动化门禁。
+- 教学或团队 onboard 时，用 `moonaudit` 给 MoonBit 示例项目做统一体检，降低协作成本。
 
-## Out of Scope
+**拟实现的核心功能**
 
-- No full linter, AST-level semantic analysis, or release packaging in v1
-- Focus on structure, README frontmatter, changelog presence, documentation conventions, and ignore support with high signal and low overhead
+- 检查 `moon.pkg`、README、`src/`、`tests/`、`CHANGELOG.md` 等核心结构；
+- 检查 READLE frontmatter：`title`、`description`；
+- 检查 Markdown 与 MoonBit 文件的 YAML frontmatter；
+- 输出分级报告：`ERROR`、`WARN`、`INFO`；
+- 支持 plain / JSON / Markdown 输出，便于脚本和 CI 集成；
+- 支持 `.moonauditignore` 与 `--ignore-file`；
+- 支持 `--severity` 过滤；
+- 支持 `self-audit`；
+- 发现问题时返回非零退出码；
+- 提供回归测试与示例项目。
 
-## Deliverables
+**是否为原创项目、移植项目或参考已有开源项目**
 
-- MoonBit 主实现仓库
-- README + 快速开始
-- 可运行示例与测试
-- GitHub Actions CI
-- 演示说明或录屏
+- 原创项目。
 
-## Suggested repo metadata
+**参考开源项目说明**
 
-- English name: `moonaudit`
-- Description: `Local MoonBit project structure audit CLI`
-- Topics: `moonbit`, `cli`, `developer-experience`, `audit`
+- 不适用。
 
-## 项目特色
+**GitHub 仓库链接**
 
-- 以 MoonBit 为主语言实现
-- 适合黑客松的“开发体验/工具链”方向
-- 范围小、演示直观、容易评审理解价值
+- [https://github.com/ChenShuo08/moonaudit](https://github.com/ChenShuo08/moonaudit)
