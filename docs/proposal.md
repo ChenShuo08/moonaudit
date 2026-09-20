@@ -3,7 +3,7 @@
 **基本信息**
 
 - 项目名称：moonaudit：本地 MoonBit 项目结构审计 CLI
-- 参赛者：布丁大魔王
+- 参赛者：陈铄
 - 联系方式：g1ker@qq.com
 - GitHub 仓库链接：[https://github.com/ChenShuo08/moonaudit](https://github.com/ChenShuo08/moonaudit)
 - 项目方向：MoonBit 开发体验工具 / 应用与内容工具
@@ -16,7 +16,7 @@ moonaudit 是一个本地 MoonBit 项目结构审计 CLI，用于检查 MoonBit 
 **项目方向，通用性说明**
 
 - 属于“语言与开发工具”和“应用与内容工具”交叉方向，聚焦 MoonBit 本地开发体验。
-- 工具不绑定特定业务领域，可复用于示例项目、教学仓库、团队 MoonBit 小项目和 Hackathon 提交物。
+- 工具不绑定特定业务领域，可复用于示例项目、教学仓库、团队 MoonBit 小项目和黑客松提交物。
 - 输出格式兼顾人类审阅与机器集成，因此既可用于个人本地检查，也可用于 CI / 预提交钩子。
 
 **预期使用场景**
@@ -25,7 +25,7 @@ moonaudit 是一个本地 MoonBit 项目结构审计 CLI，用于检查 MoonBit 
 - 在 CI 或预提交钩子中运行 `moonaudit`，把项目结构规范纳入自动化门禁。
 - 教学或团队 onboard 时，用 `moonaudit` 给 MoonBit 示例项目做统一体检，降低协作成本。
 
-**拟实现的核心功能**
+**核心功能**
 
 - 检查 `moon.pkg`、README、`src/`、`tests/`、`CHANGELOG.md` 等核心结构；
 - 检查 READLE frontmatter：`title`、`description`；
@@ -37,14 +37,6 @@ moonaudit 是一个本地 MoonBit 项目结构审计 CLI，用于检查 MoonBit 
 - 支持 `self-audit`；
 - 发现问题时返回非零退出码；
 - 提供回归测试与示例项目。
-
-**是否为原创项目、移植项目或参考已有开源项目**
-
-- 原创项目。
-
-**参考开源项目说明**
-
-- 不适用。
 
 **GitHub 仓库链接**
 
