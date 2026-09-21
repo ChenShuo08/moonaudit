@@ -74,7 +74,7 @@ README.internal.md
 
 ## 许可协议
 
-Apache-2.0
+MIT License
 
 
 
